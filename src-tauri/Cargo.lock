@@ -1353,7 +1353,7 @@ dependencies = [
 
 [[package]]
 name = "fuck-the-tange-uploader"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "dirs 5.0.1",
  "md5 0.7.0",

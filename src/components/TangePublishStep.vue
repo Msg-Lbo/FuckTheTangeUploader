@@ -179,7 +179,12 @@ watch(
         <n-input-number v-model:value="importance" :min="1" :max="3" style="width: 120px" />
       </n-form-item>
       <n-form-item label="版本说明">
-        <n-input v-model:value="content" placeholder="版本说明" />
+        <n-input
+          v-model:value="content"
+          type="textarea"
+          placeholder="版本说明"
+          :autosize="{ minRows: 3, maxRows: 6 }"
+        />
       </n-form-item>
     </n-form>
 
