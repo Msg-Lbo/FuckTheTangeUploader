@@ -143,11 +143,11 @@ pub async fn list_versions(cfg: &GenataConfig) -> Result<Vec<VersionItem>, Strin
         let json: serde_json::Value = client
             .post(&url)
             .bearer_auth(&token)
-            .form(&[
+            .query(&[
                 ("page", page_text.as_str()),
                 ("size", page_size_text.as_str()),
-                ("product_id", cfg.product_id.as_str()),
             ])
+            .form(&[("product_id", cfg.product_id.as_str())])
             .send()
             .await
             .map_err(|e| format!("查询版本列表第 {page} 页失败: {e}"))?
@@ -155,14 +155,24 @@ pub async fn list_versions(cfg: &GenataConfig) -> Result<Vec<VersionItem>, Strin
             .await
             .map_err(|e| format!("解析版本列表第 {page} 页失败: {e}"))?;
         check_code(&json)?;
+        let total = json["data"]["total"]
+            .as_u64()
+            .ok_or_else(|| format!("版本列表第 {page} 页响应缺少 data.total"))?
+            as usize; // 服务端版本总数
         let page_versions: Vec<VersionItem> =
             serde_json::from_value(json["data"]["results"].clone())
                 .map_err(|e| format!("解析版本列表第 {page} 页结构失败: {e}"))?;
-        let result_count = page_versions.len(); // 当前页实际数量
+        let page_count = page_versions.len(); // 当前页实际数量
         versions.extend(page_versions);
 
-        if result_count < page_size {
+        if versions.len() >= total {
             break;
+        }
+        if page_count == 0 {
+            return Err(format!(
+                "版本列表分页异常: 已获取 {} 条，服务端声明共 {total} 条",
+                versions.len()
+            ));
         }
         page += 1;
     }
