@@ -82,6 +82,17 @@ jobs:
           $branch = "${{ github.event.repository.default_branch }}"
           $manifestPath = Join-Path $env:RUNNER_TEMP "latest.json"
           gh release download $tag --pattern latest.json --dir $env:RUNNER_TEMP
+          $release = gh api "repos/${{ github.repository }}/releases/tags/$tag" | ConvertFrom-Json
+          $installer = $release.assets | Where-Object { $_.name -like "*_x64-setup.exe" } | Select-Object -First 1
+          if (-not $installer) {
+            throw "Release $tag 缺少 x64 NSIS 安装包"
+          }
+          $manifest = Get-Content -Raw $manifestPath | ConvertFrom-Json
+          $manifest.platforms.PSObject.Properties | ForEach-Object {
+            $_.Value.url = $installer.browser_download_url
+          }
+          $manifest | ConvertTo-Json -Depth 10 | Set-Content -Encoding utf8NoBOM $manifestPath
+          gh release upload $tag $manifestPath --clobber
           $manifestBase64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes($manifestPath))
           $currentFileJson = gh api "repos/${{ github.repository }}/contents/updater/latest.json?ref=$branch" 2>$null
           $arguments = @(

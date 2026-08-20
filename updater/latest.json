@@ -5,11 +5,11 @@
   "platforms": {
     "windows-x86_64": {
       "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUU0xKZHNyKytJSkpIb3VZS3dEOU1Ha1pQaFNDZTBKWmFFWS9jaXVNZllQdmNMemZobU5NYVRUc05IQndhUmtJUlZsNFJKUkg1c1R3YlN4dVh1NE8wN1ZpVFVOZ0s2UXdZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg3MjIyOTk3CWZpbGU65Zu65Lu254mI5pys5o6o6YCB5bel5YW3XzAuMS4xX3g2NC1zZXR1cC5leGUKdGQwTkNqdXNkS2pCOVFlTVgxQWxWOVZIL2lDYi9CaUhHSHRuTUoxOWV4YWZPanNVN25BUVc5TzQ2VTlpUzIzUmpWb09GQWd3U2g0ZmllOHRFdmxtQ3c9PQo=",
-      "url": "https://api.github.com/repos/Msg-Lbo/FuckTheTangeUploader/releases/assets/522126023"
+      "url": "https://github.com/Msg-Lbo/FuckTheTangeUploader/releases/download/v0.1.1/_0.1.1_x64-setup.exe"
     },
     "windows-x86_64-nsis": {
       "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUU0xKZHNyKytJSkpIb3VZS3dEOU1Ha1pQaFNDZTBKWmFFWS9jaXVNZllQdmNMemZobU5NYVRUc05IQndhUmtJUlZsNFJKUkg1c1R3YlN4dVh1NE8wN1ZpVFVOZ0s2UXdZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg3MjIyOTk3CWZpbGU65Zu65Lu254mI5pys5o6o6YCB5bel5YW3XzAuMS4xX3g2NC1zZXR1cC5leGUKdGQwTkNqdXNkS2pCOVFlTVgxQWxWOVZIL2lDYi9CaUhHSHRuTUoxOWV4YWZPanNVN25BUVc5TzQ2VTlpUzIzUmpWb09GQWd3U2g0ZmllOHRFdmxtQ3c9PQo=",
-      "url": "https://api.github.com/repos/Msg-Lbo/FuckTheTangeUploader/releases/assets/522126023"
+      "url": "https://github.com/Msg-Lbo/FuckTheTangeUploader/releases/download/v0.1.1/_0.1.1_x64-setup.exe"
     }
   }
 }
