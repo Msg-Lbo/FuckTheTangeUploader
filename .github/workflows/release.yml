@@ -31,6 +31,8 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: 扩大 rustc 主线程栈
+        env:
+          PYTHONUTF8: 1
         run: python scripts/patch-rustc-stack.py
 
       - name: 缓存 Rust 构建
