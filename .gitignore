@@ -1,0 +1,26 @@
+node_modules/
+dist/
+src-tauri/gen/schemas/
+src-tauri/target/
+
+.claude/
+.vscode/
+.idea/
+AGENTS.md
+CLAUDE.md
+init.md
+
+*.log
+.DS_Store
+Thumbs.db
+
+.env
+.env.*
+!.env.example
+
+config.json
+config.json.migrated
+
+# 已生成且未参与构建的本地辅助文件
+scripts/generate-icon.cjs
+src-tauri/icons/icon.png

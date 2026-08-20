@@ -1,0 +1,68 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+  font-size: 13px;
+  color: #0f172a;
+  background: #e8eef4;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+
+  &:hover {
+    background: #94a3b8;
+  }
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+code,
+.mono {
+  font-family: "Cascadia Code", "Consolas", "Microsoft YaHei UI", monospace;
+  font-size: 12px;
+}
+
+.section {
+  &__title {
+    margin: 0 0 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+  }
+}
+
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  .n-form-item {
+    margin-bottom: 0;
+  }
+}
+
+.row-selected td {
+  background: #ecfeff !important;
+}
