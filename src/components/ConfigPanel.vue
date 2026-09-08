@@ -3,9 +3,9 @@ import { computed, onMounted, reactive, ref, watch } from "vue";
 import { getVersion } from "@tauri-apps/api/app";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { check as checkForUpdate } from "@tauri-apps/plugin-updater";
-import { NButton, NForm, NFormItem, NInput, NInputNumber, NProgress, NSelect, NTabPane, NTabs, useMessage } from "naive-ui";
+import { NButton, NForm, NFormItem, NInput, NInputNumber, NProgress, NTabPane, NTabs, useMessage } from "naive-ui";
 import { saveConfig } from "../api";
-import { applyFirmware, findFirmware, firmwareOptions, store } from "../store";
+import { store } from "../store";
 
 const emit = defineEmits<{ (e: "saved"): void }>();
 const message = useMessage();
@@ -139,20 +139,25 @@ async function handleUpdateAction() {
   await handleCheckUpdate();
 }
 
-/** 配置里改固件 ID 时同步产品 ID 和服务器目录 */
-function onFirmwareChange(firmwareId: string) {
-  applyFirmware(firmwareId);
-  const profile = findFirmware(firmwareId);
-  if (profile) form.genata.productId = profile.productId;
-}
-
-/** 保存配置 */
+/** 保存配置（固件批次由顶栏管理，这里只写账号凭据） */
 async function onSave() {
-  const config = { sftp: form.sftp, genata: form.genata, tange: form.tange };
+  const config = {
+    sftp: {
+      ...form.sftp,
+      remoteDir: store.serverDir,
+    },
+    genata: {
+      ...form.genata,
+      productId: store.config?.genata.productId || form.genata.productId,
+    },
+    tange: {
+      ...form.tange,
+      firmwareId: store.firmwareId || form.tange.firmwareId,
+    },
+  };
   try {
     await saveConfig(config);
     store.config = config;
-    applyFirmware(form.tange.firmwareId);
     message.success("配置已保存");
     emit("saved");
   } catch (e) {
@@ -180,9 +185,6 @@ onMounted(() => void loadAppVersion());
           <n-form-item label="密码">
             <n-input v-model:value="form.sftp.password" type="password" show-password-on="click" />
           </n-form-item>
-          <n-form-item label="远程目录">
-            <n-input v-model:value="form.sftp.remoteDir" placeholder="留空则上传到根目录" />
-          </n-form-item>
         </n-form>
       </n-tab-pane>
 
@@ -197,9 +199,6 @@ onMounted(() => void loadAppVersion());
           <n-form-item label="接口地址">
             <n-input v-model:value="form.genata.baseUrl" />
           </n-form-item>
-          <n-form-item label="产品 ID">
-            <n-input v-model:value="form.genata.productId" />
-          </n-form-item>
         </n-form>
       </n-tab-pane>
 
@@ -213,14 +212,6 @@ onMounted(() => void loadAppVersion());
           </n-form-item>
           <n-form-item label="Access Secret">
             <n-input v-model:value="form.tange.accessSecret" type="password" show-password-on="click" />
-          </n-form-item>
-          <n-form-item label="固件 ID">
-            <n-select
-              v-model:value="form.tange.firmwareId"
-              :options="firmwareOptions"
-              placeholder="选择固件批次"
-              @update:value="onFirmwareChange"
-            />
           </n-form-item>
         </n-form>
       </n-tab-pane>

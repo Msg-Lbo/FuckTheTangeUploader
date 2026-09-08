@@ -4,7 +4,7 @@ import { NButton, NDataTable, NForm, NFormItem, NInput, NTag, useMessage } from 
 import type { DataTableColumns } from "naive-ui";
 import StepShell from "./StepShell.vue";
 import { genataInsertVersion, genataListFiles, genataListVersions } from "../api";
-import { buildCdnUrl, currentGenataConfig, store } from "../store";
+import { buildCdnUrl, currentGenataConfig, currentProductId, store } from "../store";
 import type { VersionItem } from "../types";
 
 const emit = defineEmits<{ (e: "next"): void; (e: "prev"): void }>();
@@ -148,7 +148,7 @@ watch(
 <template>
   <StepShell title="GenataTech 登记" desc="进入后自动查询版本并带出文件名；登记成功后自动进入 Tange">
     <template #extra>
-      <n-tag :bordered="false">product_id：{{ store.config?.genata.productId || "未选择" }}　p_id：{{ store.latestPId || "未查询" }}</n-tag>
+      <n-tag :bordered="false">product_id：{{ currentProductId() || "未选择" }}　p_id：{{ store.latestPId || "未查询" }}</n-tag>
     </template>
 
     <div class="toolbar">

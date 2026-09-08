@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, h, ref, watch } from "vue";
 import {
+  NAlert,
   NButton,
   NCollapse,
   NCollapseItem,
@@ -30,6 +31,9 @@ const importance = ref(2); // 重要性
 const versionType = ref("testing"); // 版本类型
 const versions = ref<TangeVersionItem[]>([]);
 const loading = ref(false);
+const publishing = ref(false); // 登记中
+const publishStatus = ref<"idle" | "loading" | "success" | "error">("idle"); // 登记状态
+const publishMessage = ref(""); // 登记状态文案
 
 const removeReason = ref(""); // 取消理由
 const removeDeviceIds = ref(""); // 设备 ID，逗号/换行分隔
@@ -38,6 +42,13 @@ const showDeleteConfirm = ref(false); // 删除确认弹窗显隐
 
 /** 不带 V 前缀的版本号（Tange 用 1.0.0.5） */
 const versionNumber = computed(() => store.newVersion.replace(/^V/i, ""));
+
+/** 登记状态 Alert 类型 */
+const publishAlertType = computed(() => {
+  if (publishStatus.value === "success") return "success";
+  if (publishStatus.value === "error") return "error";
+  return "info";
+});
 
 /** Tange 已有版本表格列定义 */
 const columns: DataTableColumns<TangeVersionItem> = [
@@ -72,9 +83,14 @@ const columns: DataTableColumns<TangeVersionItem> = [
 async function doPublish() {
   if (!store.config) return message.error("请先配置账号信息");
   if (!store.cdnUrl) return message.error("请先在第二步完成登记");
+  if (!versionNumber.value) return message.error("请先准备版本号");
+
+  publishing.value = true;
+  publishStatus.value = "loading";
+  publishMessage.value = `正在登记 ${store.firmwareId} / ${versionNumber.value} …`;
   try {
     await tangePublishVersion(store.config.tange, {
-        firmwareId: store.firmwareId,
+      firmwareId: store.firmwareId,
       versionNumber: versionNumber.value,
       versionType: versionType.value,
       downloadLink: store.cdnUrl,
@@ -82,10 +98,16 @@ async function doPublish() {
       content: content.value,
       importance: importance.value,
     });
+    publishStatus.value = "success";
+    publishMessage.value = `登记成功：${store.firmwareId} / ${versionNumber.value}（${versionType.value}）`;
     message.success("登记成功");
     emit("next");
   } catch (e) {
+    publishStatus.value = "error";
+    publishMessage.value = `登记失败：${e}`;
     message.error(`${e}`);
+  } finally {
+    publishing.value = false;
   }
 }
 
@@ -188,6 +210,23 @@ watch(
       </n-form-item>
     </n-form>
 
+    <n-alert
+      v-if="publishStatus !== 'idle'"
+      :title="publishStatus === 'loading' ? '登记中' : publishStatus === 'success' ? '登记成功' : '登记失败'"
+      :type="publishAlertType"
+      :bordered="false"
+    >
+      <div class="publish-status">
+        <p>{{ publishMessage }}</p>
+        <p v-if="store.cdnUrl" class="publish-status__meta">
+          CDN：<code class="mono">{{ store.cdnUrl }}</code>
+        </p>
+        <p v-if="store.md5" class="publish-status__meta">
+          MD5：<code class="mono">{{ store.md5 }}</code>
+        </p>
+      </div>
+    </n-alert>
+
     <n-data-table
       v-if="versions.length"
       :columns="columns"
@@ -234,10 +273,10 @@ watch(
     </n-modal>
 
     <template #footer>
-      <n-button type="primary" @click="doPublish">登记版本</n-button>
+      <n-button type="primary" :loading="publishing" @click="doPublish">登记版本</n-button>
       <span class="spacer" />
-      <n-button @click="emit('prev')">上一步</n-button>
-      <n-button type="primary" ghost @click="emit('next')">下一步</n-button>
+      <n-button :disabled="publishing" @click="emit('prev')">上一步</n-button>
+      <n-button type="primary" ghost :disabled="publishing" @click="emit('next')">下一步</n-button>
     </template>
   </StepShell>
 </template>
@@ -254,6 +293,23 @@ watch(
 
   :deep(.n-form-item:last-child) {
     grid-column: 1 / -1;
+  }
+}
+
+.publish-status {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  &__meta {
+    color: #64748b;
+    word-break: break-all;
   }
 }
 
