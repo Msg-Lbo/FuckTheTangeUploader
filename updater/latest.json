@@ -1,15 +1,15 @@
 {
-  "version": "0.1.2",
+  "version": "0.1.3",
   "notes": "Windows 安装包与签名在线更新文件由 GitHub Actions 自动生成。",
-  "pub_date": "2026-09-08T04:35:43.786Z",
+  "pub_date": "2026-09-08T06:16:13.7Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUU0xKZHNyKytJSk5yU1pMWERPMWh5OFFCUGVPaDR1Wk5yeG9UM21pbVZrK1hMNTdJU1RPOTBNdEt5bFBjc3NjZ0xKdW5TbjlPNU4ycTFhTHRoS0c4TGQxVXU3ZGt3Y2c0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg4ODQyMTQwCWZpbGU65Zu65Lu254mI5pys5o6o6YCB5bel5YW3XzAuMS4yX3g2NC1zZXR1cC5leGUKUzd3TkV4M0psY1hVVzZpbnRtc2paaFRFVU1Ma2d1dElXQnFRWDMwSjJRY2t2QVY2VkRSR0N1cldLZFhXbkg0STlqQlZxekovWVZqVkd6K3c0L2dlQWc9PQo=",
-      "url": "https://github.com/Msg-Lbo/FuckTheTangeUploader/releases/download/v0.1.2/_0.1.2_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUU0xKZHNyKytJSk5PY05nMWdYZWRPWmdGeUpoMTVBKzJ2c24zS2ZCNGVubDFES0lrTGVFSHdzelNjbFJ2UWRUd1BHQ2twS3gxWEppc3pBTWcwbUZNbklmOGdZaGh4bWd3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg4ODQ4MTcxCWZpbGU65Zu65Lu254mI5pys5o6o6YCB5bel5YW3XzAuMS4zX3g2NC1zZXR1cC5leGUKVFJqRWhhZjNRdUpaTUVGc0hzaHZvWjNsS3hiamFkb0ZDTUhpUWU3cTR2MEtTd2NXNVRGN2wwZHBGeWJLWE1GRWsxVXlrSm9yazN1VmFhYk5YOUNtQ2c9PQo=",
+      "url": "https://github.com/Msg-Lbo/FuckTheTangeUploader/releases/download/v0.1.3/_0.1.3_x64-setup.exe"
     },
     "windows-x86_64-nsis": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUU0xKZHNyKytJSk5yU1pMWERPMWh5OFFCUGVPaDR1Wk5yeG9UM21pbVZrK1hMNTdJU1RPOTBNdEt5bFBjc3NjZ0xKdW5TbjlPNU4ycTFhTHRoS0c4TGQxVXU3ZGt3Y2c0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg4ODQyMTQwCWZpbGU65Zu65Lu254mI5pys5o6o6YCB5bel5YW3XzAuMS4yX3g2NC1zZXR1cC5leGUKUzd3TkV4M0psY1hVVzZpbnRtc2paaFRFVU1Ma2d1dElXQnFRWDMwSjJRY2t2QVY2VkRSR0N1cldLZFhXbkg0STlqQlZxekovWVZqVkd6K3c0L2dlQWc9PQo=",
-      "url": "https://github.com/Msg-Lbo/FuckTheTangeUploader/releases/download/v0.1.2/_0.1.2_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUU0xKZHNyKytJSk5PY05nMWdYZWRPWmdGeUpoMTVBKzJ2c24zS2ZCNGVubDFES0lrTGVFSHdzelNjbFJ2UWRUd1BHQ2twS3gxWEppc3pBTWcwbUZNbklmOGdZaGh4bWd3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg4ODQ4MTcxCWZpbGU65Zu65Lu254mI5pys5o6o6YCB5bel5YW3XzAuMS4zX3g2NC1zZXR1cC5leGUKVFJqRWhhZjNRdUpaTUVGc0hzaHZvWjNsS3hiamFkb0ZDTUhpUWU3cTR2MEtTd2NXNVRGN2wwZHBGeWJLWE1GRWsxVXlrSm9yazN1VmFhYk5YOUNtQ2c9PQo=",
+      "url": "https://github.com/Msg-Lbo/FuckTheTangeUploader/releases/download/v0.1.3/_0.1.3_x64-setup.exe"
     }
   }
 }
