@@ -1,6 +1,6 @@
 [package]
 name = "fuck-the-tange-uploader"
-version = "0.1.2"
+version = "0.1.3"
 description = "固件版本推送工具"
 edition = "2021"
 

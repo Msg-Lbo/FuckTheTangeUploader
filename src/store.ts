@@ -53,21 +53,6 @@ export function findFirmware(firmwareId: string): FirmwareProfile | undefined {
 }
 
 /**
- * 拼接 SFTP 远程目录：账号配置目录 + 当前固件服务器目录
- * @param {String} base - 配置里的远程目录
- * @param {String} dir - 固件服务器目录
- */
-export function joinRemote(base: string, dir: string): string {
-  const prefix = base.replace(/[/\\]+$/, "");
-  const name = dir.replace(/^[/\\]+|[/\\]+$/g, "");
-  if (!prefix) return name;
-  if (!name) return prefix.replace(/\\/g, "/");
-  const normalized = prefix.replace(/\\/g, "/");
-  if (normalized === name || normalized.endsWith(`/${name}`)) return normalized;
-  return `${normalized}/${name}`;
-}
-
-/**
  * 拼 CDN 下载地址
  * @param {String} filename - 固件文件名
  */
@@ -76,14 +61,21 @@ export function buildCdnUrl(filename: string): string {
 }
 
 /**
- * 当前上传/列目录用的 SFTP 配置（带上固件服务器目录）
+ * 当前上传/列目录用的 SFTP 配置（远程目录由顶栏固件批次决定）
  */
 export function currentSftpConfig(): SftpConfig {
   const sftp = store.config!.sftp;
   return {
     ...sftp,
-    remoteDir: joinRemote(sftp.remoteDir, store.serverDir),
+    remoteDir: store.serverDir,
   };
+}
+
+/**
+ * 当前产品 ID（随固件批次）
+ */
+export function currentProductId(): string {
+  return findFirmware(store.firmwareId)?.productId ?? "";
 }
 
 /**

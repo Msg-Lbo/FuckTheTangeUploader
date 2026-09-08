@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { getVersion } from "@tauri-apps/api/app";
-import { NButton, NDrawer, NDrawerContent, NTag, useMessage } from "naive-ui";
+import { NButton, NDrawer, NDrawerContent, NSelect, NTag, useMessage } from "naive-ui";
 import ConfigPanel from "./ConfigPanel.vue";
 import GenataStep from "./GenataStep.vue";
 import PipelineStatus from "./PipelineStatus.vue";
 import SftpStep from "./SftpStep.vue";
 import TangePublishStep from "./TangePublishStep.vue";
 import TangePushStep from "./TangePushStep.vue";
-import { loadConfig } from "../api";
-import { applyFirmware, store } from "../store";
+import { loadConfig, saveConfig } from "../api";
+import { applyFirmware, currentProductId, firmwareOptions, store } from "../store";
 
 const message = useMessage();
 const showConfig = ref(false); // 配置抽屉显隐
@@ -28,11 +28,27 @@ function goStep(step: number) {
   store.current = step;
 }
 
+/**
+ * 顶栏切换固件批次，同步远程目录 / 产品 ID / Tange 固件 ID 并落盘
+ * @param {String} firmwareId - 固件 ID
+ */
+async function onFirmwareChange(firmwareId: string) {
+  applyFirmware(firmwareId);
+  if (!store.config) return;
+  store.config.sftp.remoteDir = store.serverDir;
+  try {
+    await saveConfig(store.config);
+  } catch (e) {
+    message.error(`同步固件批次失败：${e}`);
+  }
+}
+
 /** 启动时加载本地配置 */
 onMounted(async () => {
   try {
     store.config = await loadConfig();
     applyFirmware(store.config.tange.firmwareId);
+    store.config.sftp.remoteDir = store.serverDir;
     appVersion.value = await getVersion();
   } catch (e) {
     message.error(`初始化失败：${e}`);
@@ -61,7 +77,20 @@ onMounted(async () => {
       </div>
       <div class="header-meta">
         <n-tag :bordered="false" size="small" class="version-tag">v{{ appVersion || "--" }}</n-tag>
-        <n-tag :bordered="false" size="small" class="meta-tag">{{ store.serverDir || "未选固件" }}</n-tag>
+        <div class="firmware-picker">
+          <label>固件 ID</label>
+          <n-select
+            size="small"
+            :value="store.firmwareId"
+            :options="firmwareOptions"
+            :consistent-menu-width="false"
+            class="firmware-picker__select"
+            placeholder="选择固件批次"
+            @update:value="onFirmwareChange"
+          />
+        </div>
+        <n-tag :bordered="false" size="small" class="meta-tag">目录 {{ store.serverDir || "—" }}</n-tag>
+        <n-tag :bordered="false" size="small" class="meta-tag">产品 {{ currentProductId() || "—" }}</n-tag>
         <n-tag :bordered="false" size="small" :type="store.config ? 'success' : 'warning'">
           {{ store.config ? "已配置" : "未配置" }}
         </n-tag>
@@ -117,8 +146,9 @@ onMounted(async () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 56px;
-    padding: 0 20px;
+    gap: 16px;
+    min-height: 56px;
+    padding: 8px 20px;
     background: #0f172a;
     color: #f8fafc;
     flex-shrink: 0;
@@ -138,6 +168,7 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-shrink: 0;
 
   &__mark {
     display: flex;
@@ -170,7 +201,38 @@ onMounted(async () => {
 .header-meta {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 8px;
+  min-width: 0;
+}
+
+.firmware-picker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+
+  label {
+    flex-shrink: 0;
+    font-size: 11px;
+    color: #94a3b8;
+  }
+
+  &__select {
+    width: min(360px, 42vw);
+  }
+
+  :deep(.n-base-selection) {
+    background: #1e293b;
+    --n-border: 1px solid #334155;
+    --n-border-hover: 1px solid #0e7490;
+    --n-border-active: 1px solid #0e7490;
+    --n-border-focus: 1px solid #0e7490;
+    --n-color: #1e293b;
+    --n-text-color: #e2e8f0;
+    --n-placeholder-color: #64748b;
+  }
 }
 
 .meta-tag {
