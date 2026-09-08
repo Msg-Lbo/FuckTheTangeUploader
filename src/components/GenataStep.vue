@@ -4,7 +4,7 @@ import { NButton, NDataTable, NForm, NFormItem, NInput, NTag, useMessage } from 
 import type { DataTableColumns } from "naive-ui";
 import StepShell from "./StepShell.vue";
 import { genataInsertVersion, genataListFiles, genataListVersions } from "../api";
-import { store } from "../store";
+import { buildCdnUrl, currentGenataConfig, store } from "../store";
 import type { VersionItem } from "../types";
 
 const emit = defineEmits<{ (e: "next"): void; (e: "prev"): void }>();
@@ -61,7 +61,7 @@ function selectVersion(row: VersionItem) {
   store.newVersion = row.version; // 版本号（带 V）
   store.remoteFilename = row.filename; // 文件名
   store.md5 = row.md5 ?? ""; // MD5
-  store.cdnUrl = `http://fw.genatatech.com/static/firmware/GT-Z300S-4G/${row.filename}`; // CDN 地址
+  store.cdnUrl = buildCdnUrl(row.filename); // CDN 地址
   store.description = row.description ?? "";
   filename.value = row.filename;
   cdnUrl.value = store.cdnUrl;
@@ -74,7 +74,7 @@ async function queryVersions(silent = false) {
   if (!store.config) return message.error("请先配置账号信息");
   loading.value = true;
   try {
-    const list = await genataListVersions(store.config.genata);
+    const list = await genataListVersions(currentGenataConfig());
     versions.value = list;
     if (list.length > 0) {
       const latest = list.reduce((current, item) => item.id > current.id ? item : current); // id 最大的最新版本
@@ -96,7 +96,7 @@ async function queryVersions(silent = false) {
 async function queryFiles() {
   if (!store.config) return message.error("请先配置账号信息");
   try {
-    files.value = await genataListFiles(store.config.genata);
+    files.value = await genataListFiles(currentGenataConfig());
     message.success(`查询到 ${files.value.length} 个文件`);
   } catch (e) {
     message.error(`查询失败：${e}`);
@@ -112,13 +112,13 @@ async function doInsert() {
   loading.value = true;
   try {
     const id = await genataInsertVersion(
-      store.config.genata,
+      currentGenataConfig(),
       version.value,
       filename.value,
       store.latestPId,
       description.value,
     );
-    cdnUrl.value = `http://fw.genatatech.com/static/firmware/GT-Z300S-4G/${filename.value}`;
+    cdnUrl.value = buildCdnUrl(filename.value);
     store.cdnUrl = cdnUrl.value;
     store.newVersion = version.value;
     store.remoteFilename = filename.value;
@@ -148,7 +148,7 @@ watch(
 <template>
   <StepShell title="GenataTech 登记" desc="进入后自动查询版本并带出文件名；登记成功后自动进入 Tange">
     <template #extra>
-      <n-tag :bordered="false">p_id：{{ store.latestPId || "未查询" }}</n-tag>
+      <n-tag :bordered="false">product_id：{{ store.config?.genata.productId || "未选择" }}　p_id：{{ store.latestPId || "未查询" }}</n-tag>
     </template>
 
     <div class="toolbar">

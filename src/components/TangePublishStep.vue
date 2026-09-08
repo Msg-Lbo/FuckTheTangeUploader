@@ -74,7 +74,7 @@ async function doPublish() {
   if (!store.cdnUrl) return message.error("请先在第二步完成登记");
   try {
     await tangePublishVersion(store.config.tange, {
-      firmwareId: store.config.tange.firmwareId,
+        firmwareId: store.firmwareId,
       versionNumber: versionNumber.value,
       versionType: versionType.value,
       downloadLink: store.cdnUrl,
@@ -202,7 +202,7 @@ watch(
       <n-collapse-item title="取消设备升级推送" name="remove">
         <n-form label-placement="left" label-width="80" :show-feedback="false" class="form-stack">
           <n-form-item label="固件 ID">
-            <n-tag type="info" :bordered="false">{{ store.config?.tange.firmwareId }}</n-tag>
+            <n-tag type="info" :bordered="false">{{ store.firmwareId }}</n-tag>
           </n-form-item>
           <n-form-item label="取消理由">
             <n-input v-model:value="removeReason" placeholder="如：测试取消" />

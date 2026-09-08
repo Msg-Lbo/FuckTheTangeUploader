@@ -15,6 +15,14 @@ export interface GenataConfig {
   productId: string;
 }
 
+/** 固件批次：决定 Tange 固件 ID、CDN/SFTP 目录、Genata 产品 ID */
+export interface FirmwareProfile {
+  firmwareId: string;
+  label: string;
+  serverDir: string;
+  productId: string;
+}
+
 /** Tange 平台配置 */
 export interface TangeConfig {
   appId: string;

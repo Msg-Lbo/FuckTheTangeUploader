@@ -60,7 +60,7 @@ async function doPush() {
       </div>
       <div class="summary__item">
         <span>固件 ID</span>
-        <strong class="mono">{{ store.config?.tange.firmwareId || "—" }}</strong>
+        <strong class="mono">{{ store.firmwareId || "—" }}</strong>
       </div>
     </div>
 

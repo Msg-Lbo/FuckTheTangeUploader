@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { open } from "@tauri-apps/plugin-dialog";
-import { NAlert, NButton, NDataTable, NForm, NFormItem, NInput, useMessage } from "naive-ui";
+import { NAlert, NButton, NDataTable, NForm, NFormItem, NInput, NSelect, useMessage } from "naive-ui";
 import type { DataTableColumns } from "naive-ui";
 import StepShell from "./StepShell.vue";
 import { sftpListFiles, uploadSftp } from "../api";
-import { store } from "../store";
+import { applyFirmware, currentSftpConfig, firmwareOptions, store } from "../store";
 import type { SftpFileEntry } from "../types";
 
 const emit = defineEmits<{ (e: "next"): void }>();
@@ -50,8 +50,10 @@ async function pickFile() {
 /** 列出服务器文件 */
 async function listRemoteFiles() {
   if (!store.config) return message.error("请先配置账号信息");
+  if (!store.firmwareId) return message.error("请先选择固件 ID");
   try {
-    files.value = await sftpListFiles(store.config.sftp, store.config.sftp.remoteDir);
+    const sftpCfg = currentSftpConfig();
+    files.value = await sftpListFiles(sftpCfg, sftpCfg.remoteDir);
     message.success(`查到 ${files.value.length} 个条目`);
   } catch (e) {
     message.error(`读取失败：${e}`);
@@ -61,12 +63,13 @@ async function listRemoteFiles() {
 /** 上传并计算 MD5 */
 async function doUpload() {
   if (!store.config) return message.error("请先配置账号信息");
+  if (!store.firmwareId) return message.error("请先选择固件 ID");
   if (!store.localPath) return message.error("请先选择本地文件");
   if (!remoteFilename.value) return message.error("请填写远程文件名");
 
   uploading.value = true;
   try {
-    const md5 = await uploadSftp(store.localPath, remoteFilename.value, store.config.sftp);
+    const md5 = await uploadSftp(store.localPath, remoteFilename.value, currentSftpConfig());
     store.remoteFilename = remoteFilename.value;
     store.md5 = md5;
     message.success("上传成功，MD5 已计算");
@@ -76,6 +79,14 @@ async function doUpload() {
   } finally {
     uploading.value = false;
   }
+}
+
+/**
+ * 第一步选定固件批次，后续 CDN/Tange 都按这套走
+ * @param {String} firmwareId - 固件 ID
+ */
+function onFirmwareChange(firmwareId: string) {
+  applyFirmware(firmwareId);
 }
 </script>
 
@@ -98,6 +109,17 @@ async function doUpload() {
     </button>
 
     <n-form label-placement="left" label-width="92" :show-feedback="false" class="form-stack">
+      <n-form-item label="固件 ID">
+        <n-select
+          :value="store.firmwareId"
+          :options="firmwareOptions"
+          placeholder="选择要推送的固件批次"
+          @update:value="onFirmwareChange"
+        />
+      </n-form-item>
+      <n-form-item label="服务器目录">
+        <n-input :value="store.serverDir" disabled />
+      </n-form-item>
       <n-form-item label="远程文件名">
         <n-input v-model:value="remoteFilename" placeholder="上传到服务器的文件名" />
       </n-form-item>

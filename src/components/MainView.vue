@@ -9,7 +9,7 @@ import SftpStep from "./SftpStep.vue";
 import TangePublishStep from "./TangePublishStep.vue";
 import TangePushStep from "./TangePushStep.vue";
 import { loadConfig } from "../api";
-import { store } from "../store";
+import { applyFirmware, store } from "../store";
 
 const message = useMessage();
 const showConfig = ref(false); // 配置抽屉显隐
@@ -32,6 +32,7 @@ function goStep(step: number) {
 onMounted(async () => {
   try {
     store.config = await loadConfig();
+    applyFirmware(store.config.tange.firmwareId);
     appVersion.value = await getVersion();
   } catch (e) {
     message.error(`初始化失败：${e}`);
@@ -60,7 +61,7 @@ onMounted(async () => {
       </div>
       <div class="header-meta">
         <n-tag :bordered="false" size="small" class="version-tag">v{{ appVersion || "--" }}</n-tag>
-        <n-tag :bordered="false" size="small" class="meta-tag">GT-Z300S-4G</n-tag>
+        <n-tag :bordered="false" size="small" class="meta-tag">{{ store.serverDir || "未选固件" }}</n-tag>
         <n-tag :bordered="false" size="small" :type="store.config ? 'success' : 'warning'">
           {{ store.config ? "已配置" : "未配置" }}
         </n-tag>
