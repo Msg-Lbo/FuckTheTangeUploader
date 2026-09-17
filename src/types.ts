@@ -31,11 +31,21 @@ export interface TangeConfig {
   firmwareId: string;
 }
 
+/** 推送升级记录（用于复用上次设备） */
+export interface PushRecord {
+  firmwareId: string;
+  versionNumber: string;
+  reason: string;
+  deviceIds: string[];
+  time: string;
+}
+
 /** 应用全局配置 */
 export interface AppConfig {
   sftp: SftpConfig;
   genata: GenataConfig;
   tange: TangeConfig;
+  pushHistory: PushRecord[];
 }
 
 /** Genata 版本列表项 */

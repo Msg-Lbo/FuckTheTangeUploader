@@ -10,6 +10,8 @@ pub struct AppConfig {
     pub genata: GenataConfig,
     #[serde(default)]
     pub tange: TangeConfig,
+    #[serde(default)]
+    pub push_history: Vec<PushRecord>,
 }
 
 impl Default for AppConfig {
@@ -18,8 +20,25 @@ impl Default for AppConfig {
             sftp: SftpConfig::default(),
             genata: GenataConfig::default(),
             tange: TangeConfig::default(),
+            push_history: Vec::new(),
         }
     }
+}
+
+/// 推送升级记录（按固件批次分别保存，供「上次推送」复用设备）
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PushRecord {
+    #[serde(default)]
+    pub firmware_id: String,
+    #[serde(default)]
+    pub version_number: String,
+    #[serde(default)]
+    pub reason: String,
+    #[serde(default)]
+    pub device_ids: Vec<String>,
+    #[serde(default)]
+    pub time: String,
 }
 
 /// SFTP 配置

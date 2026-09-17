@@ -154,6 +154,7 @@ async function onSave() {
       ...form.tange,
       firmwareId: store.firmwareId || form.tange.firmwareId,
     },
+    pushHistory: store.config?.pushHistory ?? [],
   };
   try {
     await saveConfig(config);
